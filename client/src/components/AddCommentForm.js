@@ -1,17 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import { commentAddedSuccess } from "../actions/commentActions";
+import { useDispatch } from "react-redux";
 
 const AddCommentForm = () => {
+  const [author, setAuthor] = useState("");
+  const [body, setBody] = useState("");
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newComment = { author, body };
+    axios
+      .post("/api/comments", { ...newComment })
+      .then((response) => response.data)
+      .then((newComment) => {
+        dispatch(commentAddedSuccess(newComment));
+        resetInputs();
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const resetInputs = () => {
+    setAuthor("");
+    setBody("");
+  };
   return (
-    <form action="">
+    <form aria-label="Add a comment" onSubmit={handleSubmit}>
       <h2>Post a Comment</h2>
       <div className="input-group">
-        <label>Your Name</label>
-        <input type="text" name="author" value="" />
+        <label htmlFor="author">Your Name</label>
+        <input
+          id="author"
+          type="text"
+          name="author"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+        />
       </div>
 
       <div className="input-group">
-        <label>Your Comment</label>
-        <textarea name="body" value="" cols="30" rows="10"></textarea>
+        <label htmlFor="body">Your Comment</label>
+        <textarea
+          aria-label="Your Comment"
+          id="body"
+          name="body"
+          value={body}
+          cols="30"
+          rows="10"
+          onChange={(e) => setBody(e.target.value)}
+        ></textarea>
       </div>
       <button type="submit">Submit</button>
     </form>
