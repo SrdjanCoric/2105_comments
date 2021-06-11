@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { commentAddedSuccess } from "../actions/commentActions";
+import { commentAdded } from "../actions/commentActions";
 import { useDispatch } from "react-redux";
 
 const AddCommentForm = () => {
@@ -11,14 +11,7 @@ const AddCommentForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const newComment = { author, body };
-    axios
-      .post("/api/comments", { ...newComment })
-      .then((response) => response.data)
-      .then((newComment) => {
-        dispatch(commentAddedSuccess(newComment));
-        resetInputs();
-      })
-      .catch((err) => console.log(err));
+    dispatch(commentAdded(newComment, resetInputs));
   };
 
   const resetInputs = () => {

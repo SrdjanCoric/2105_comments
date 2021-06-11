@@ -1,20 +1,14 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { commentsReceivedSuccess } from "../actions/commentActions";
+import { commentsReceived } from "../actions/commentActions";
 import CommentThread from "./CommentThread";
 
 const Comments = () => {
   const dispatch = useDispatch();
   const comments = useSelector((state) => state.comments);
   useEffect(() => {
-    axios
-      .get("/api/comments")
-      .then((response) => response.data)
-      .then((data) => {
-        dispatch(commentsReceivedSuccess(data));
-      })
-      .catch((err) => console.log(err));
+    dispatch(commentsReceived());
   }, []);
 
   return (
